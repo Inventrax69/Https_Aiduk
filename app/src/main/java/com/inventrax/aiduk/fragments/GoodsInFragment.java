@@ -76,11 +76,11 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
     private static final String classCode = "API_FRAG_GOODSIN";
     private View rootView;
     private TextView lblStoreRefNo, lblInboundQty, lblScannedSku, lblDock, lblHu;
-    private CardView cvScanPallet, cvScanSku, cvScanDock;
-    private ImageView ivScanPallet, ivScanSku, ivScanDock;
+    private CardView cvScanSku, cvScanDock;
+    private ImageView  ivScanSku, ivScanDock;
     private TextInputLayout txtInputLayoutPallet, txtInputLayoutSerial, txtInputLayoutMfgDate, txtInputLayoutExpDate,
             txtInputLayoutBatch, txtInputLayoutPrjRef, txtInputLayoutQty, txtInputLayoutKitID, txtInputLayoutMRP, txtInputLayoutDock;
-    private EditText etPallet, etSerial, etMfgDate, etExpDate, etBatch, etPrjRef, etQty, etKidID, etMRP, etDock;
+    private EditText etSerial, etMfgDate, etExpDate, etBatch, etPrjRef, etQty, etKidID, etMRP, etDock;
     private CheckBox cbDescripency;
     private SearchableSpinner spinnerSelectSloc;
     private Button btnClear, btnReceive;
@@ -150,15 +150,12 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         lblDock = (TextView) rootView.findViewById(R.id.lblDock);
         lblHu = (TextView) rootView.findViewById(R.id.lblHu);
 
-        cvScanPallet = (CardView) rootView.findViewById(R.id.cvScanPallet);
         cvScanSku = (CardView) rootView.findViewById(R.id.cvScanSku);
         cvScanDock = (CardView) rootView.findViewById(R.id.cvScanDock);
 
-        ivScanPallet = (ImageView) rootView.findViewById(R.id.ivScanPallet);
         ivScanSku = (ImageView) rootView.findViewById(R.id.ivScanSku);
         ivScanDock = (ImageView) rootView.findViewById(R.id.ivScanDock);
 
-        txtInputLayoutPallet = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutPallet);
         txtInputLayoutSerial = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutSerial);
         txtInputLayoutMfgDate = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutMfgDate);
         txtInputLayoutBatch = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutBatch);
@@ -169,7 +166,6 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         txtInputLayoutMRP = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutMRP);
         txtInputLayoutDock = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutDock);
 
-        etPallet = (EditText) rootView.findViewById(R.id.etPallet);
         etSerial = (EditText) rootView.findViewById(R.id.etSerial);
         etMfgDate = (EditText) rootView.findViewById(R.id.etMfgDate);
         etBatch = (EditText) rootView.findViewById(R.id.etBatch);
@@ -210,7 +206,6 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
 
         btnClear.setOnClickListener(this);
         btnReceive.setOnClickListener(this);
-        cvScanPallet.setOnClickListener(this);
 
         if (scanType.equals("Auto")) {
             btnReceive.setEnabled(false);
@@ -294,32 +289,6 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
                 clearFields();
                 break;
 
-            case R.id.cvScanPallet:
-                if (isContanierScanned) {
-                    etPallet.setText("");
-                    //ValidatePalletCode();
-                    isContanierScanned = false;
-                    cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                    ivScanPallet.setImageResource(R.drawable.fullscreen_img);
-                    etExpDate.setText("");
-                    etMfgDate.setText("");
-                    etBatch.setText("");
-                    etQty.setText("");
-                    etPrjRef.setText("");
-                    etSerial.setText("");
-                    etKidID.setText("");
-                    etMRP.setText("");
-                    huNo = "";
-                    huSize = "";
-                    lblHu.setText("");
-                    Materialcode = "";
-                    lblScannedSku.setText("");
-                    isRsnScanned = false;
-                    cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
-                    ivScanSku.setImageResource(R.drawable.fullscreen_img);
-                }
-                break;
-
             case R.id.btnReceive:
 
                 if (!lblScannedSku.getText().toString().isEmpty() && !Materialcode.equals("")) {
@@ -352,13 +321,9 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
         ivScanSku.setImageResource(R.drawable.fullscreen_img);
 
-        cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-        ivScanPallet.setImageResource(R.drawable.fullscreen_img);
-
         cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
         ivScanDock.setImageResource(R.drawable.fullscreen_img);
 
-        etPallet.setText("");
         etExpDate.setText("");
         etMfgDate.setText("");
         etBatch.setText("");
@@ -476,11 +441,7 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
                 if (!isDockScanned) {
                     ValidateLocation(scannedData);
                 } else {
-                    if (!isContanierScanned) {
-                        ValidatePallet(scannedData);
-                    } else {
                         ValiDateMaterial(scannedData);
-                    }
                 }
 
             } else {
@@ -896,126 +857,6 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         }
     }
 
-
-    public void ValidatePallet(final String scannedData) {
-        try {
-
-            WMSCoreMessage message = new WMSCoreMessage();
-            message = common.SetAuthentication(EndpointConstants.ScanDTO, getContext());
-            ScanDTO scanDTO = new ScanDTO();
-            scanDTO.setUserID(userId);
-            scanDTO.setAccountID(accountId);
-            // scanDTO.setTenantID(String.valueOf(tenantID));
-            //scanDTO.setWarehouseID(String.valueOf(warehouseID));
-            scanDTO.setScanInput(scannedData);
-            scanDTO.setInboundID(inboundId);
-            //inboundDTO.setIsOutbound("0");
-            message.setEntityObject(scanDTO);
-
-
-            Call<String> call = null;
-            ApiInterface apiService = RetrofitBuilderHttpsEx.getInstance(getActivity()).create(ApiInterface.class);
-
-            try {
-                //Checking for Internet Connectivity
-                // if (NetworkUtils.isInternetAvailable()) {
-                // Calling the Interface method
-                call = apiService.ValidatePallet(message);
-                ProgressDialogUtils.showProgressDialog("Please Wait");
-                // } else {
-                // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
-                // return;
-                // }
-
-            } catch (Exception ex) {
-                try {
-                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "002_01", getActivity());
-                    logException();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ProgressDialogUtils.closeProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0002);
-            }
-            try {
-                //Getting response from the method
-                call.enqueue(new Callback<String>() {
-
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
-
-                        if ((core.getType().toString().equals("Exception"))) {
-                            List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
-                            _lExceptions = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
-
-                            WMSExceptionMessage owmsExceptionMessage = null;
-                            for (int i = 0; i < _lExceptions.size(); i++) {
-
-                                owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-                            }
-
-                            etPallet.setText("");
-                            cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                            ivScanPallet.setImageResource(R.drawable.invalid_cross);
-                            ProgressDialogUtils.closeProgressDialog();
-                            common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
-                        } else {
-                            LinkedTreeMap<?, ?> _lResult = new LinkedTreeMap<>();
-                            _lResult = (LinkedTreeMap<?, ?>) core.getEntityObject();
-
-                            ScanDTO scanDTO1 = new ScanDTO(_lResult.entrySet());
-                            ProgressDialogUtils.closeProgressDialog();
-                            if (scanDTO1 != null) {
-                                if (scanDTO1.getScanResult()) {
-                                    etPallet.setText(scannedData);
-                                    //ValidatePalletCode();
-                                    isContanierScanned = true;
-                                    cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                                    ivScanPallet.setImageResource(R.drawable.check);
-                                } else {
-                                    isContanierScanned = false;
-                                    etPallet.setText("");
-                                    cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                                    ivScanPallet.setImageResource(R.drawable.warning_img);
-                                    common.showUserDefinedAlertType(errorMessages.EMC_0009, getActivity(), getContext(), "Warning");
-                                }
-                            } else {
-                                isContanierScanned = false;
-                                common.showUserDefinedAlertType("Error while getting data", getActivity(), getContext(), "Error");
-                            }
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable throwable) {
-                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
-                        ProgressDialogUtils.closeProgressDialog();
-                        DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0001);
-                    }
-                });
-            } catch (Exception ex) {
-                try {
-                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "002_02", getActivity());
-                    logException();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ProgressDialogUtils.closeProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0001);
-            }
-        } catch (Exception ex) {
-            try {
-                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "002_03", getActivity());
-                logException();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ProgressDialogUtils.closeProgressDialog();
-            DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0002);
-        }
-    }
 
     public void getSLocs() {
 
@@ -1497,7 +1338,7 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
             InboundDTO inboundDTO = new InboundDTO();
             inboundDTO.setMcode(Materialcode);
             inboundDTO.setStoreRefNo(lblStoreRefNo.getText().toString());
-            inboundDTO.setCartonNo(etPallet.getText().toString());
+            inboundDTO.setCartonNo(null);
             inboundDTO.setStorageLocation(storageLoc);
             inboundDTO.setIsDam(String.valueOf(cbDescripency.isChecked()));
             inboundDTO.setUserId(userId);

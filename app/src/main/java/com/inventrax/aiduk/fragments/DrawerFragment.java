@@ -101,7 +101,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         List<String> mainListInbound = new ArrayList<String>();
         mainListInbound.add("Receiving");
         mainListInbound.add("Putaway");
-        mainListInbound.add("Pallet Transfers");
+        //mainListInbound.add("Pallet Transfers");
 
         // Adding child data List two
         List<String> mainListOutbound  = new ArrayList<String>();
@@ -165,7 +165,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
         List<String> mainListInbound = new ArrayList<String>();
         mainListInbound.add("Receiving");
         mainListInbound.add("Putaway");
-        mainListInbound.add("Pallet Transfers");
+        //mainListInbound.add("Pallet Transfers");
 
         // Adding child data List two
         List<String> mainListOutbound  = new ArrayList<String>();
