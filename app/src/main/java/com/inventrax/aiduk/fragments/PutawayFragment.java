@@ -83,13 +83,13 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
     private SearchableSpinner spinnerSelectStRef, spinnerSelectReason;
     private TextInputLayout txtInputLayoutBatch, txtInputLayoutSerial, txtInputLayoutMfgDate,
             txtInputLayoutExpDate, txtInputLayoutProjectRef, txtInputLayoutQty, txtInputLayoutMRP;
-    private EditText etBatch, etSerial, etMfgDate, etExpDate, etProjectRef, etQty, etMRP,etScannedLocation;
-    private ImageView ivScanLocation, ivScanPallet, ivScanSku, ivScanDock;
+    private EditText etBatch, etSerial, etMfgDate, etExpDate, etProjectRef, etQty, etMRP, etScannedLocation;
+    private ImageView ivScanLocation, ivScanSku, ivScanDock;
     private Button btnGo, btnClear, btnSkip,
             btnOk, btnCloseSkip, btnPutaway;
-    private CardView cvScanPallet, cvScanLocation, cvScanSku, cvScanDock;
+    private CardView cvScanLocation, cvScanSku, cvScanDock;
     private TextView lblRefNo, lblSuggestedLoc, lblScannedLocation, lblStoreRefNo,
-            lblPutawayQty, lblContainer, lblSKU, lblScannedDock, lblDock,lblScannedLoc;
+            lblPutawayQty, lblSKU, lblScannedDock, lblDock, lblScannedLoc;
 
     private ScanValidator scanValidator;
     String scanner = null, SuggestedId = null, inboundId = null,
@@ -110,7 +110,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
     private String userId = null, scanType = null, accountId = null, suggestedPutawayId = null;
     public List<String> lstPalletnumberHeader = null;
     List<InboundDTO> lstInbound = null;
-    private boolean isContainerScanned = false, isDockScanned = false, restrictScan = false,isLocationScanned=false;
+    private boolean isDockScanned = false, restrictScan = false, isLocationScanned = false;
     SoundUtils soundUtils;
     PutawayDTO returningObj;
 
@@ -124,10 +124,10 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         }
     };
 
-    public void myScannedData(Context context, String barcode){
+    public void myScannedData(Context context, String barcode) {
         try {
             ProcessScannedinfo(barcode.trim());
-        }catch (Exception e){
+        } catch (Exception e) {
             //  Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -182,21 +182,19 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    MainActivity mainActivity=(MainActivity)getActivity();
-                    mainActivity.barcode="";
-                    return  true;
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    mainActivity.barcode = "";
+                    return true;
                 }
                 return false;
             }
         });
 
         cvScanLocation = (CardView) rootView.findViewById(R.id.cvScanLocation);
-        cvScanPallet = (CardView) rootView.findViewById(R.id.cvScanPallet);
         cvScanSku = (CardView) rootView.findViewById(R.id.cvScanSku);
         cvScanDock = (CardView) rootView.findViewById(R.id.cvScanDock);
 
         ivScanLocation = (ImageView) rootView.findViewById(R.id.ivScanLocation);
-        ivScanPallet = (ImageView) rootView.findViewById(R.id.ivScanPallet);
         ivScanSku = (ImageView) rootView.findViewById(R.id.ivScanSku);
         ivScanDock = (ImageView) rootView.findViewById(R.id.ivScanDock);
 
@@ -243,7 +241,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         lblScannedLocation = (TextView) rootView.findViewById(R.id.lblScannedLocation);
         lblStoreRefNo = (TextView) rootView.findViewById(R.id.lblStoreRefNo);
         lblPutawayQty = (TextView) rootView.findViewById(R.id.lblPutawayQty);
-        lblContainer = (TextView) rootView.findViewById(R.id.lblContainer);
         lblSKU = (TextView) rootView.findViewById(R.id.lblSKU);
         lblScannedDock = (TextView) rootView.findViewById(R.id.lblScannedDock);
         lblDock = (TextView) rootView.findViewById(R.id.lblDock);
@@ -254,7 +251,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         btnOk.setOnClickListener(this);
         btnCloseSkip.setOnClickListener(this);
         btnPutaway.setOnClickListener(this);
-        cvScanPallet.setOnClickListener(this);
 
         if (scanType.equals("Auto")) {                      // Disabling Putaway button in Auto mode
             btnPutaway.setEnabled(false);
@@ -336,19 +332,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                 FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new HomeFragment());
                 break;
 
-          case R.id.cvScanPallet:
-              if(!isContainerScanned){
-                  isContainerScanned = true;
-                  cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                  ivScanPallet.setImageResource(R.drawable.check);
-              }else{
-                  isContainerScanned = false;
-                  cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                  ivScanPallet.setImageResource(R.drawable.fullscreen_img);
-              }
-
-              break;
-
 
             case R.id.btnGo:
 
@@ -376,14 +359,10 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                 // Clears the UI
 
-                isLocationScanned=false;
-                isContainerScanned=false;
+                isLocationScanned = false;
 
                 cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                 ivScanLocation.setImageResource(R.drawable.fullscreen_img);
-
-                cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                ivScanPallet.setImageResource(R.drawable.fullscreen_img);
 
                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                 ivScanSku.setImageResource(R.drawable.fullscreen_img);
@@ -558,7 +537,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
     //Assigning scanned value to the respective fields
     public void ProcessScannedinfo(String scannedData) {
 
-        if(((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).isDrawerOpen(GravityCompat.START)){
+        if (((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).isDrawerOpen(GravityCompat.START)) {
             return;
         }
 
@@ -569,19 +548,17 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
         if (scannedData != null && !common.isPopupActive() && !restrictScan) {
 
-            if(!ProgressDialogUtils.isProgressActive()){
+            if (!ProgressDialogUtils.isProgressActive()) {
 
-                if(rlPutaway.getVisibility() == View.VISIBLE && !lblSKU.getText().toString().isEmpty()){
+                if (rlPutaway.getVisibility() == View.VISIBLE && !lblSKU.getText().toString().isEmpty()) {
 
-                    if(isDockScanned){
+                    if (isDockScanned) {
 
-                        if(!isLocationScanned)
+                        if (!isLocationScanned)
                             ValidateLocation(scannedData);
-                        else{
-                            if(!isContainerScanned)
-                                ValidatePallet(scannedData);
-                            else
-                                ValiDateMaterial(scannedData);
+                        else {
+
+                            ValiDateMaterial(scannedData);
 
                         }
 
@@ -608,8 +585,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                         return;
                     }*/
 
-                    }
-                    else{
+                    } else {
                         if (lblDock.getText().toString().equals(scannedData)) {
 
                             lblScannedDock.setText(scannedData);
@@ -625,14 +601,12 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                     }
 
                 }
-            }
-            else {
-                if(!Common.isPopupActive())
-                {
+            } else {
+                if (!Common.isPopupActive()) {
                     common.showUserDefinedAlertType(errorMessages.EMC_080, getActivity(), getContext(), "Error");
 
                 }
-                soundUtils.alertWarning(getActivity(),getContext());
+                soundUtils.alertWarning(getActivity(), getContext());
 
             }
 
@@ -801,7 +775,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
             //inboundDTO.setIsOutbound("0");
             message.setEntityObject(scanDTO);
 
-            Log.v("ABCDE",new Gson().toJson(message));
+            Log.v("ABCDE", new Gson().toJson(message));
 
             Call<String> call = null;
             ApiInterface apiService = RetrofitBuilderHttpsEx.getInstance(getActivity()).create(ApiInterface.class);
@@ -850,15 +824,15 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                             ProgressDialogUtils.closeProgressDialog();
                             common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
                         } else {
-                            LinkedTreeMap<?, ?>_lResult = new LinkedTreeMap<>();
+                            LinkedTreeMap<?, ?> _lResult = new LinkedTreeMap<>();
                             _lResult = (LinkedTreeMap<?, ?>) core.getEntityObject();
 
-                            Log.v("ABCDE",new Gson().toJson(_lResult));
+                            Log.v("ABCDE", new Gson().toJson(_lResult));
 
-                            ScanDTO scanDTO1=new ScanDTO(_lResult.entrySet());
+                            ScanDTO scanDTO1 = new ScanDTO(_lResult.entrySet());
                             ProgressDialogUtils.closeProgressDialog();
-                            if(scanDTO1!=null){
-                                if(scanDTO1.getScanResult()){
+                            if (scanDTO1 != null) {
+                                if (scanDTO1.getScanResult()) {
 
                                 /* ----For RSN reference----
                                     0 Sku|1 BatchNo|2 SerialNO|3 MFGDate|4 EXpDate|5 ProjectRefNO|6 Kit Id|7 line No|8 MRP ---- For SKU with 9 MSP's
@@ -872,13 +846,13 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                                     /*    if (scannedData.split("[|]").length != 5) {*/
 
-                                    SKU=scanDTO1.getSkuCode();
+                                    SKU = scanDTO1.getSkuCode();
                                     etBatch.setText(scanDTO1.getBatch());
                                     etSerial.setText(scanDTO1.getSerialNumber());
                                     etMfgDate.setText(scanDTO1.getMfgDate());
                                     etExpDate.setText(scanDTO1.getExpDate());
                                     etProjectRef.setText(scanDTO1.getPrjRef());
-                                    kitId=scanDTO1.getKitID();
+                                    kitId = scanDTO1.getKitID();
                                     etMRP.setText(scanDTO1.getMrp());
 
                                     lineNo = scanDTO1.getLineNumber();
@@ -914,134 +888,14 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                         }
                                     }
 
-                                } else{
+                                } else {
                                     cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.white));
                                     ivScanSku.setImageResource(R.drawable.warning_img);
                                     common.showUserDefinedAlertType(errorMessages.EMC_0009, getActivity(), getContext(), "Warning");
                                 }
-                            }else{
+                            } else {
                                 common.showUserDefinedAlertType("Error while getting data", getActivity(), getContext(), "Error");
                             }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable throwable) {
-                        //Toast.makeText(LoginActivity.this, throwable.toString(), Toast.LENGTH_LONG).show();
-                        ProgressDialogUtils.closeProgressDialog();
-                        DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0001);
-                    }
-                });
-            } catch (Exception ex) {
-                try {
-                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "002_02", getActivity());
-                    logException();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ProgressDialogUtils.closeProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0001);
-            }
-        } catch (Exception ex) {
-            try {
-                exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "002_03", getActivity());
-                logException();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ProgressDialogUtils.closeProgressDialog();
-            DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0002);
-        }
-    }
-
-    public void ValidatePallet(final String scannedData) {
-        try {
-
-            WMSCoreMessage message = new WMSCoreMessage();
-            message = common.SetAuthentication(EndpointConstants.ScanDTO, getContext());
-            ScanDTO scanDTO = new ScanDTO();
-            scanDTO.setUserID(userId);
-            scanDTO.setAccountID(accountId);
-            // scanDTO.setTenantID(String.valueOf(tenantID));
-            //scanDTO.setWarehouseID(String.valueOf(warehouseID));
-            scanDTO.setScanInput(scannedData);
-            scanDTO.setInboundID(inboundId);
-            //inboundDTO.setIsOutbound("0");
-            message.setEntityObject(scanDTO);
-
-
-            Call<String> call = null;
-            ApiInterface apiService = RetrofitBuilderHttpsEx.getInstance(getActivity()).create(ApiInterface.class);
-
-            try {
-                //Checking for Internet Connectivity
-                // if (NetworkUtils.isInternetAvailable()) {
-                // Calling the Interface method
-                call = apiService.ValidatePallet(message);
-                ProgressDialogUtils.showProgressDialog("Please Wait");
-                // } else {
-                // DialogUtils.showAlertDialog(getActivity(), "Please enable internet");
-                // return;
-                // }
-
-            } catch (Exception ex) {
-                try {
-                    exceptionLoggerUtils.createExceptionLog(ex.toString(), classCode, "002_01", getActivity());
-                    logException();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ProgressDialogUtils.closeProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(), errorMessages.EMC_0002);
-            }
-            try {
-                //Getting response from the method
-                call.enqueue(new Callback<String>() {
-
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        core = gson.fromJson(response.body().toString(), WMSCoreMessage.class);
-
-                        if ((core.getType().toString().equals("Exception"))) {
-                            List<LinkedTreeMap<?, ?>> _lExceptions = new ArrayList<LinkedTreeMap<?, ?>>();
-                            _lExceptions = (List<LinkedTreeMap<?, ?>>) core.getEntityObject();
-
-                            WMSExceptionMessage owmsExceptionMessage = null;
-                            for (int i = 0; i < _lExceptions.size(); i++) {
-
-                                owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
-                            }
-
-                            lblContainer.setText("");
-                            cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                            ivScanPallet.setImageResource(R.drawable.invalid_cross);
-                            ProgressDialogUtils.closeProgressDialog();
-                            common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
-                        } else {
-                            LinkedTreeMap<?, ?>_lResult = new LinkedTreeMap<>();
-                            _lResult = (LinkedTreeMap<?, ?>) core.getEntityObject();
-
-                            ScanDTO scanDTO1=new ScanDTO(_lResult.entrySet());
-                            ProgressDialogUtils.closeProgressDialog();
-                            if(scanDTO1!=null){
-                                if(scanDTO1.getScanResult()){
-                                    lblContainer.setText(scannedData);
-                                    //ValidatePalletCode();
-                                    isContainerScanned = true;
-                                    cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                                    ivScanPallet.setImageResource(R.drawable.check);
-                                } else{
-                                    isContainerScanned=false;
-                                    lblContainer.setText("");
-                                    cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.white));
-                                    ivScanPallet.setImageResource(R.drawable.warning_img);
-                                    common.showUserDefinedAlertType(errorMessages.EMC_0009, getActivity(), getContext(), "Warning");
-                                }
-                            }else{
-                                isContainerScanned=false;
-                                common.showUserDefinedAlertType("Error while getting data", getActivity(), getContext(), "Error");
-                            }
-
                         }
                     }
 
@@ -1133,40 +987,40 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                 owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
                             }
 
-                            isLocationScanned=false;
+                            isLocationScanned = false;
                             etScannedLocation.setText("");
                             cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.white));
                             ivScanLocation.setImageResource(R.drawable.invalid_cross);
-                           // common.showUserDefinedAlertType(errorMessages.EMC_0013, getActivity(), getContext(), "Error");
+                            // common.showUserDefinedAlertType(errorMessages.EMC_0013, getActivity(), getContext(), "Error");
                             ProgressDialogUtils.closeProgressDialog();
                             common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
                         } else {
-                            LinkedTreeMap<?, ?>_lResult = new LinkedTreeMap<>();
+                            LinkedTreeMap<?, ?> _lResult = new LinkedTreeMap<>();
                             _lResult = (LinkedTreeMap<?, ?>) core.getEntityObject();
 
-                            ScanDTO scanDTO1=new ScanDTO(_lResult.entrySet());
+                            ScanDTO scanDTO1 = new ScanDTO(_lResult.entrySet());
 
-                            if(scanDTO1!=null){
-                                if(scanDTO1.getScanResult()){
+                            if (scanDTO1 != null) {
+                                if (scanDTO1.getScanResult()) {
                                     etScannedLocation.setText(scannedData);
                                     cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.white));
                                     ivScanLocation.setImageResource(R.drawable.check);
-                                    isLocationScanned=true;
+                                    isLocationScanned = true;
                                     rlStRefSelect.setVisibility(View.GONE);
                                     rlLocationScan.setVisibility(View.GONE);
                                     rlSkip.setVisibility(View.GONE);
                                     rlPutaway.setVisibility(View.VISIBLE);
 
 
-                                } else{
-                                    isLocationScanned=false;
+                                } else {
+                                    isLocationScanned = false;
                                     etScannedLocation.setText("");
                                     cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.white));
                                     ivScanLocation.setImageResource(R.drawable.warning_img);
                                     common.showUserDefinedAlertType(errorMessages.EMC_0013, getActivity(), getContext(), "Warning");
                                 }
-                            }else{
-                                isDockScanned=false;
+                            } else {
+                                isDockScanned = false;
                                 common.showUserDefinedAlertType("Error while getting data", getActivity(), getContext(), "Error");
                             }
                             ProgressDialogUtils.closeProgressDialog();
@@ -1527,10 +1381,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                                         // Putaway suggestions
 
-                                        if (!dto.getCartonCode().equals("0") && !dto.getCartonCode().equals("")) {
-
-                                            lblContainer.setText(dto.getCartonCode());
-                                        }
                                         lblSuggestedLoc.setText(dto.getLocation());
                                         lblSKU.setText(dto.getMCode());
                                         etBatch.setText(dto.getBatchNo());
@@ -1898,7 +1748,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         putawayDTO.setSerialNo(etSerial.getText().toString());
         putawayDTO.setPutAwayQty(etQty.getText().toString());
         putawayDTO.setUserID(userId);
-        putawayDTO.setCartonCode(lblContainer.getText().toString());
+        putawayDTO.setCartonCode(null);
         putawayDTO.setLocation(lblSuggestedLoc.getText().toString());
         putawayDTO.setScannedLocation(etScannedLocation.getText().toString());
         putawayDTO.setTotalQty(totalQty);
@@ -2004,13 +1854,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                                         SKU = "";
 
-                                        lblContainer.setText("");
-
-                                        if (!dto.getCartonCode().equals("0") && !dto.getCartonCode().equals("") && !dto.getCartonCode().equals("null")) {
-
-                                            lblContainer.setText(dto.getCartonCode());
-                                        }
-
                                         lblSuggestedLoc.setText(dto.getLocation());
 
                                         lblScannedLocation.setText("");
@@ -2022,15 +1865,11 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                         etExpDate.setText(dto.getExpDate());
                                         etMRP.setText(dto.getMRP());
 
-                                        isLocationScanned=false;
-                                        isContainerScanned=false;
+                                        isLocationScanned = false;
 
 
                                         cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
                                         ivScanLocation.setImageResource(R.drawable.fullscreen_img);
-
-                                        cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                                        ivScanPallet.setImageResource(R.drawable.fullscreen_img);
 
                                         cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                                         ivScanSku.setImageResource(R.drawable.fullscreen_img);
@@ -2039,8 +1878,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                         return;
 
                                         // if  suggested location is same as previous suggested location
-                                    }
-                                    else if (lblSuggestedLoc.getText().toString().equals(dto.getLocation())) {
+                                    } else if (lblSuggestedLoc.getText().toString().equals(dto.getLocation())) {
 
                                         soundUtils.alertSuccess(getActivity(), getContext());
                                         rlSkip.setVisibility(View.GONE);
@@ -2051,12 +1889,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                                         SKU = "";
 
-                                        lblContainer.setText("");
-
-                                        if (!dto.getCartonCode().equals("0") && !dto.getCartonCode().equals("")) {
-
-                                            lblContainer.setText(dto.getCartonCode());
-                                        }
 
                                         lblSKU.setText(dto.getMCode());
                                         etBatch.setText(dto.getBatchNo());
@@ -2065,8 +1897,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                         etExpDate.setText(dto.getExpDate());
                                         etMRP.setText(dto.getMRP());
 
-                                        cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                                        ivScanPallet.setImageResource(R.drawable.fullscreen_img);
 
                                         cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                                         ivScanSku.setImageResource(R.drawable.fullscreen_img);
@@ -2076,8 +1906,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                         if (dto.getSuggestedReceivedQty().equals("0") && dto.getSuggestedQty().equals("0")) {
 
                                             // if suggested received qty and suggested qty both equals to 0 ,, then putaway is completed
-                                            cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                                            ivScanPallet.setImageResource(R.drawable.fullscreen_img);
 
                                             cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                                             ivScanSku.setImageResource(R.drawable.fullscreen_img);
@@ -2089,7 +1917,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                             ivScanLocation.setImageResource(R.drawable.fullscreen_img);
 
                                             etScannedLocation.setText("");
-                                            lblContainer.setText("");
                                             SKU = "";
 
                                             btnPutaway.setEnabled(false);
@@ -2101,7 +1928,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                             etExpDate.setText("");
                                             etMRP.setText("");
                                             etProjectRef.setText("");
-
 
 
                                             common.showUserDefinedAlertType(errorMessages.EMC_0074 + "" + refNo, getActivity(), getContext(), "Success");
@@ -2301,7 +2127,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         putawayDTO.setProjectRefNo(etProjectRef.getText().toString());
         putawayDTO.setMRP(etMRP.getText().toString());
         putawayDTO.setUserID(userId);
-        putawayDTO.setCartonCode(lblContainer.getText().toString());
+        putawayDTO.setCartonCode(null);
         putawayDTO.setLocation(lblScannedLocation.getText().toString());
         putawayDTO.setInboundId(inboundId);
         putawayDTO.setSkipQty(etQty.getText().toString());
@@ -2377,13 +2203,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                     materialMasterId = dto.getMaterialMasterId();
                                     lblSKU.setText(dto.getMCode());
 
-                                    if (!dto.getCartonCode().equals("0") && !dto.getCartonCode().equals("")) {
-
-                                        lblContainer.setText(dto.getCartonCode());
-                                    } else {
-                                        lblContainer.setText("");
-                                    }
-
                                     SKU = "";
 
                                     suggestedQty = dto.getSuggestedQty();
@@ -2406,8 +2225,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                                         SKU = "";
 
-                                        cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                                        ivScanPallet.setImageResource(R.drawable.fullscreen_img);
 
                                         cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                                         ivScanSku.setImageResource(R.drawable.fullscreen_img);
@@ -2424,18 +2241,15 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                         lblSuggestedLoc.setText(dto.getLocation());
 
                                         lblScannedLocation.setText("");
-                                        lblContainer.setText("");
+
                                         SKU = "";
 
                                         cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
                                         ivScanLocation.setImageResource(R.drawable.fullscreen_img);
 
-                                        cvScanPallet.setCardBackgroundColor(getResources().getColor(R.color.palletColor));
-                                        ivScanPallet.setImageResource(R.drawable.fullscreen_img);
 
                                         cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                                         ivScanSku.setImageResource(R.drawable.fullscreen_img);
-                                        isContainerScanned = false;
 
                                         returningObj = dto;
                                     }
