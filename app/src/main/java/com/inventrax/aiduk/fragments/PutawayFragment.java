@@ -110,7 +110,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
     private String userId = null, scanType = null, accountId = null, suggestedPutawayId = null;
     public List<String> lstPalletnumberHeader = null;
     List<InboundDTO> lstInbound = null;
-    private boolean isDockScanned = false, restrictScan = false, isLocationScanned = false;
+    private boolean isDockScanned = true, restrictScan = false, isLocationScanned = false;
     SoundUtils soundUtils;
     PutawayDTO returningObj;
 
@@ -306,6 +306,11 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
             }
         });
 
+        isDockScanned = true;
+
+        cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.white));
+        ivScanDock.setImageResource(R.drawable.check);
+
 
         // To get Store Ref#
         getStoreRefNo();
@@ -361,7 +366,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                 isLocationScanned = false;
 
-                cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
+                cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
                 ivScanLocation.setImageResource(R.drawable.fullscreen_img);
 
                 cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
@@ -552,8 +557,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                 if (rlPutaway.getVisibility() == View.VISIBLE && !lblSKU.getText().toString().isEmpty()) {
 
-                    if (isDockScanned) {
-
                         if (!isLocationScanned)
                             ValidateLocation(scannedData);
                         else {
@@ -585,20 +588,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                         return;
                     }*/
 
-                    } else {
-                        if (lblDock.getText().toString().equals(scannedData)) {
 
-                            lblScannedDock.setText(scannedData);
-                            isDockScanned = true;
-
-                            cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.white));
-                            ivScanDock.setImageResource(R.drawable.check);
-
-                        } else {
-                            common.showUserDefinedAlertType(errorMessages.EMC_0019, getActivity(), getContext(), "Error");
-                        }
-
-                    }
 
                 }
             } else {
@@ -1020,7 +1010,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                     common.showUserDefinedAlertType(errorMessages.EMC_0013, getActivity(), getContext(), "Warning");
                                 }
                             } else {
-                                isDockScanned = false;
+                                isDockScanned = true;
                                 common.showUserDefinedAlertType("Error while getting data", getActivity(), getContext(), "Error");
                             }
                             ProgressDialogUtils.closeProgressDialog();
@@ -1468,7 +1458,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         putawayDTO.setTransferRequestDetailsId(refNo);
         putawayDTO.setInboundId(inboundId);
         putawayDTO.setMaterialMasterId(materialMasterId);
-        putawayDTO.setDock(lblScannedDock.getText().toString());
+        putawayDTO.setDock(lblDock.getText().toString());
 
         message.setEntityObject(putawayDTO);
 
@@ -1601,7 +1591,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         putawayDTO.setTransferRequestDetailsId(refNo);
         putawayDTO.setInboundId(inboundId);
         putawayDTO.setMaterialMasterId(materialMasterId);
-        putawayDTO.setDock(lblScannedDock.getText().toString());
+        putawayDTO.setDock(lblDock.getText().toString());
 
         message.setEntityObject(putawayDTO);
 
@@ -1732,7 +1722,6 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
     public void UpsertPutAwayItem() {
 
-
         WMSCoreMessage message = new WMSCoreMessage();
         message = common.SetAuthentication(EndpointConstants.PutAwayDTO, getContext());
         PutawayDTO putawayDTO = new PutawayDTO();
@@ -1748,11 +1737,11 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         putawayDTO.setSerialNo(etSerial.getText().toString());
         putawayDTO.setPutAwayQty(etQty.getText().toString());
         putawayDTO.setUserID(userId);
-        putawayDTO.setCartonCode(null);
+        putawayDTO.setCartonCode("");
         putawayDTO.setLocation(lblSuggestedLoc.getText().toString());
         putawayDTO.setScannedLocation(etScannedLocation.getText().toString());
         putawayDTO.setTotalQty(totalQty);
-        putawayDTO.setDock(lblScannedDock.getText().toString());
+        putawayDTO.setDock(lblDock.getText().toString());
 
         message.setEntityObject(putawayDTO);
 
@@ -1910,8 +1899,8 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
                                             cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
                                             ivScanSku.setImageResource(R.drawable.fullscreen_img);
 
-                                            cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
-                                            ivScanDock.setImageResource(R.drawable.fullscreen_img);
+                                            /*cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
+                                            ivScanDock.setImageResource(R.drawable.fullscreen_img);*/
 
                                             cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
                                             ivScanLocation.setImageResource(R.drawable.fullscreen_img);

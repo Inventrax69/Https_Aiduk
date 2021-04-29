@@ -80,7 +80,7 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
     private ImageView  ivScanSku, ivScanDock;
     private TextInputLayout txtInputLayoutPallet, txtInputLayoutSerial, txtInputLayoutMfgDate, txtInputLayoutExpDate,
             txtInputLayoutBatch, txtInputLayoutPrjRef, txtInputLayoutQty, txtInputLayoutKitID, txtInputLayoutMRP, txtInputLayoutDock;
-    private EditText etSerial, etMfgDate, etExpDate, etBatch, etPrjRef, etQty, etKidID, etMRP, etDock;
+    private EditText etSerial, etMfgDate, etExpDate, etBatch, etPrjRef, etQty, etKidID, etMRP;
     private CheckBox cbDescripency;
     private SearchableSpinner spinnerSelectSloc;
     private Button btnClear, btnReceive;
@@ -164,7 +164,6 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         txtInputLayoutQty = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutQty);
         txtInputLayoutKitID = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutKitID);
         txtInputLayoutMRP = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutMRP);
-        txtInputLayoutDock = (TextInputLayout) rootView.findViewById(R.id.txtInputLayoutDock);
 
         etSerial = (EditText) rootView.findViewById(R.id.etSerial);
         etMfgDate = (EditText) rootView.findViewById(R.id.etMfgDate);
@@ -174,7 +173,6 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         etQty = (EditText) rootView.findViewById(R.id.etQty);
         etKidID = (EditText) rootView.findViewById(R.id.etKidID);
         etMRP = (EditText) rootView.findViewById(R.id.etMRP);
-        etDock = (EditText) rootView.findViewById(R.id.etDock);
 
         spinnerSelectSloc = (SearchableSpinner) rootView.findViewById(R.id.spinnerSelectSloc);
         spinnerSelectSloc.setOnItemSelectedListener(this);
@@ -274,6 +272,10 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
 
         lblHu.setText("");
 
+        isDockScanned = true;
+        cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.white));
+        ivScanDock.setImageResource(R.drawable.check);
+
         // To get Storage Locations
         getSLocs();
 
@@ -321,8 +323,8 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         cvScanSku.setCardBackgroundColor(getResources().getColor(R.color.skuColor));
         ivScanSku.setImageResource(R.drawable.fullscreen_img);
 
-        cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.locationColor));
-        ivScanDock.setImageResource(R.drawable.fullscreen_img);
+        cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.white));
+        ivScanDock.setImageResource(R.drawable.check);
 
         etExpDate.setText("");
         etMfgDate.setText("");
@@ -337,11 +339,9 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
         cbDescripency.setChecked(false);
 
         etQty.setEnabled(false);
-        isDockScanned = false;
+        isDockScanned = true;
 
-        etDock.setText("");
-
-        isDockScanned = false;
+        isDockScanned = true;
         isContanierScanned = false;
 
         /*
@@ -438,11 +438,13 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
 
             if (!ProgressDialogUtils.isProgressActive()) {
 
-                if (!isDockScanned) {
+                /*if (!isDockScanned) {
                     ValidateLocation(scannedData);
                 } else {
                         ValiDateMaterial(scannedData);
-                }
+                }*/
+
+                ValiDateMaterial(scannedData);
 
             } else {
                 if (!Common.isPopupActive()) {
@@ -795,10 +797,9 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
                                 owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
                             }
 
-                            isDockScanned = false;
-                            etDock.setText("");
+                            isDockScanned = true;
                             cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.white));
-                            ivScanDock.setImageResource(R.drawable.invalid_cross);
+                            ivScanDock.setImageResource(R.drawable.check);
                             ProgressDialogUtils.closeProgressDialog();
                             common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
                         } else {
@@ -809,15 +810,13 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
 
                             if (scanDTO1 != null) {
                                 if (scanDTO1.getScanResult()) {
-                                    etDock.setText(scannedData);
                                     isDockScanned = true;
                                     cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.white));
                                     ivScanDock.setImageResource(R.drawable.check);
                                 } else {
-                                    isDockScanned = false;
-                                    etDock.setText("");
+                                    isDockScanned = true;
                                     cvScanDock.setCardBackgroundColor(getResources().getColor(R.color.white));
-                                    ivScanDock.setImageResource(R.drawable.warning_img);
+                                    ivScanDock.setImageResource(R.drawable.check);
                                     common.showUserDefinedAlertType(errorMessages.EMC_0010, getActivity(), getContext(), "Warning");
                                 }
                             } else {
@@ -1368,7 +1367,7 @@ public class GoodsInFragment extends Fragment implements View.OnClickListener, B
             inboundDTO.setInboundID(inboundId);
             inboundDTO.setMRP(etMRP.getText().toString());
             inboundDTO.setIsDam("0");
-            inboundDTO.setDock(etDock.getText().toString());
+            inboundDTO.setDock(lblDock.getText().toString());
             inboundDTO.setVehicleNo(vehicleNo);
 
             message.setEntityObject(inboundDTO);
