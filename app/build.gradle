@@ -20,9 +20,9 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('merlin.jks')
+            storeFile file('aiduk.jks')
             storePassword '123456'
-            keyAlias 'merlin'
+            keyAlias 'aiduk'
             keyPassword '123456'
         }
     }
