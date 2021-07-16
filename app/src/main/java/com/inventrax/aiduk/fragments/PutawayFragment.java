@@ -557,13 +557,13 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
 
                 if (rlPutaway.getVisibility() == View.VISIBLE && !lblSKU.getText().toString().isEmpty()) {
 
-                        if (!isLocationScanned)
-                            ValidateLocation(scannedData);
-                        else {
+                    if (!isLocationScanned)
+                        ValidateLocation(scannedData);
+                    else {
 
-                            ValiDateMaterial(scannedData);
+                        ValiDateMaterial(scannedData);
 
-                        }
+                    }
 
 
 
@@ -1737,7 +1737,7 @@ public class PutawayFragment extends Fragment implements View.OnClickListener, B
         putawayDTO.setSerialNo(etSerial.getText().toString());
         putawayDTO.setPutAwayQty(etQty.getText().toString());
         putawayDTO.setUserID(userId);
-        putawayDTO.setCartonCode("");
+        putawayDTO.setCartonCode(null);
         putawayDTO.setLocation(lblSuggestedLoc.getText().toString());
         putawayDTO.setScannedLocation(etScannedLocation.getText().toString());
         putawayDTO.setTotalQty(totalQty);

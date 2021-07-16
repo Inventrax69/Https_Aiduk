@@ -1,2 +1,2 @@
-# Referenced at E:\Pandu\Demo\Https_Aiduk\app\build\intermediates\merged_manifests\debug\AndroidManifest.xml:71
+# Referenced at D:\AndroidProjects\Https_Aiduk\app\build\intermediates\merged_manifests\debug\AndroidManifest.xml:71
 -keep class com.inventrax.aiduk.application.AppController { <init>(); }

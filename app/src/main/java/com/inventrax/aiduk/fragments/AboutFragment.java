@@ -59,7 +59,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
             txtVersion = (TextView) rootView.findViewById(R.id.txtVersion);
 
-           // txtVersion.setText(AndroidUtils.getVersionName().toString());
+            // txtVersion.setText(AndroidUtils.getVersionName().toString());
 
             try {
                 PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
@@ -86,7 +86,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
             lblReleaseDate = (TextView) rootView.findViewById(R.id.lblReleaseDate);
             txtReleaseDate = (TextView) rootView.findViewById(R.id.txtReleaseDate);
-            txtReleaseDate.setText("29-04-2021");
+            txtReleaseDate.setText("15-07-2021");
 
         } catch (Exception ex) {
             Log.d(AboutFragment.class.getName(), ex.toString());

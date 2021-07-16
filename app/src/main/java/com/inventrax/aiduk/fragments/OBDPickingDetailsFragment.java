@@ -53,6 +53,7 @@ import com.inventrax.aiduk.searchableSpinner.SearchableSpinner;
 import com.inventrax.aiduk.services.RetrofitBuilderHttpsEx;
 import com.inventrax.aiduk.util.DialogUtils;
 import com.inventrax.aiduk.util.ExceptionLoggerUtils;
+import com.inventrax.aiduk.util.FragmentUtils;
 import com.inventrax.aiduk.util.ProgressDialogUtils;
 import com.inventrax.aiduk.util.ScanValidator;
 import com.inventrax.aiduk.util.SoundUtils;
@@ -66,6 +67,8 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.inventrax.aiduk.common.Common.setIsPopupActive;
 
 /**
  * Created by Prasanna ch on 06/26/2018.
@@ -209,7 +212,7 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
         errorMessages = new ErrorMessages();
         soundUtils = new SoundUtils();
         ProgressDialogUtils.closeProgressDialog();
-        common.setIsPopupActive(false);
+        setIsPopupActive(false);
 
         pickOBDno = getArguments().getString("pickOBDno");
         pickobdId = getArguments().getString("pickobdId");
@@ -297,7 +300,7 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
 
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                common.setIsPopupActive(false);
+                                setIsPopupActive(false);
 
                                 if (!skipReason.equals("")) {
 
@@ -311,7 +314,7 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
-                                common.setIsPopupActive(false);
+                                setIsPopupActive(false);
                                 break;
                         }
 
@@ -451,7 +454,6 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
             if (!ProgressDialogUtils.isProgressActive()) {
                 if (!lblLocationNo.getText().toString().isEmpty()) {
                     if (!isValidLocation) {
-
                         if (!lblLocationNo.getText().toString().isEmpty() && lblLocationNo.getText().toString().equalsIgnoreCase(scannedData)) {
                             cvScanLocation.setCardBackgroundColor(getResources().getColor(R.color.white));
                             ivScanLocation.setImageResource(R.drawable.check);
@@ -851,7 +853,8 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
                                     huSize = oOutboundDTO.getHUSize();
                                     if (!huSize.equals("1")) {
                                         lblHu.setText("Hu: " + "" + huNo + "/" + huSize);
-                                    }else {
+                                    }
+                                    else {
                                         lblHu.setText("");
                                     }
 
@@ -1001,7 +1004,7 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
                                     owmsExceptionMessage = new WMSExceptionMessage(_lExceptions.get(i).entrySet());
                                     ProgressDialogUtils.closeProgressDialog();
                                 }
-                                common.setIsPopupActive(true);
+                                setIsPopupActive(true);
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
 
                                 if (owmsExceptionMessage.getWMSExceptionCode().equals("EMC_OB_DAL_PICKSugg_EC02") ||
@@ -1161,7 +1164,7 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
                                 lblReceivedQty.setEnabled(false);
                                 btnPick.setEnabled(false);
 
-                                common.setIsPopupActive(true);
+                                setIsPopupActive(true);
                                 common.showAlertType(owmsExceptionMessage, getActivity(), getContext());
                                 if (owmsExceptionMessage.getWMSExceptionCode().equals("EMC_OB_DAL_PICKSugg_EC02") ||
                                         owmsExceptionMessage.getWMSExceptionCode().equals("EMC_OB_DAL_PICKSugg_EC03") ||
@@ -1200,7 +1203,24 @@ public class OBDPickingDetailsFragment extends Fragment implements View.OnClickL
                                     ClearFields();
                                     clearData();
 
-                                    common.showUserDefinedAlertType(errorMessages.EMC_0071, getActivity(), getContext(), "Success");
+                              //      common.showUserDefinedAlertType(errorMessages.EMC_0071, getActivity(), getContext(), "Success");
+                                   soundUtils.alertSuccess(getActivity(), getContext());
+                                    DialogUtils.showAlertDialog(getActivity(), "Success", errorMessages.EMC_0071, R.drawable.success,new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            switch (which) {
+                                                case DialogInterface.BUTTON_POSITIVE:
+                                                    FragmentUtils.replaceFragmentWithBackStack(getActivity(), R.id.container_body, new OBDPickingHeaderFragment());
+                                                    setIsPopupActive(false);
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                    return;
+
+
+
 
 
                                 } else {

@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Pandu\\Demo\\Https_Aiduk\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-lo-rLA\\values-lo-rLA.xml",
+            "outputFile": "D:\\AndroidProjects\\Https_Aiduk\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-lo-rLA\\values-lo-rLA.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Padmaja.B\\.gradle\\caches\\transforms-2\\files-2.1\\c322c3694186788607fc7f8e38c8a25b\\res\\values-lo-rLA\\common_strings.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "170",
-                        "endColumns": "267",
-                        "endOffsets": "433"
-                    },
-                    "to": {
-                        "startLines": "19",
-                        "startColumns": "4",
-                        "startOffsets": "2914",
-                        "endColumns": "263",
-                        "endOffsets": "3173"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Padmaja.B\\.gradle\\caches\\transforms-2\\files-2.1\\cd755b075a5822b1370bb9a2e97473e2\\res\\values-lo-rLA\\base_strings.xml",
+                    "source": "C:\\Users\\Nagendra.b\\.gradle\\caches\\transforms-2\\files-2.1\\14bca8a00635ac472cf6f8ae38b9f8f1\\res\\values-lo-rLA\\base_strings.xml",
                     "from": {
                         "startLines": "24,10,9,8,7,5,6,4,19,18,17,16,3,28,27,26,25,21,20,22,12,11,15,14,13,23,29,30",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -35,6 +18,23 @@
                         "startOffsets": "105,401,532,734,866,1000,1226,1455,1582,1749,1870,2033,2154,2301,2474,2604,2782,3178,3447,3573,3680,3877,4008,4238,4380,4571,4668,4767",
                         "endColumns": "295,130,201,131,133,225,228,126,166,120,162,120,146,172,129,177,131,268,125,106,196,130,229,141,190,96,98,114",
                         "endOffsets": "396,527,729,861,995,1221,1450,1577,1744,1865,2028,2149,2296,2469,2599,2777,2909,3442,3568,3675,3872,4003,4233,4375,4566,4663,4762,4877"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Nagendra.b\\.gradle\\caches\\transforms-2\\files-2.1\\6b60268c11eaa4103e92efa86e7a290a\\res\\values-lo-rLA\\common_strings.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "170",
+                        "endColumns": "267",
+                        "endOffsets": "433"
+                    },
+                    "to": {
+                        "startLines": "19",
+                        "startColumns": "4",
+                        "startOffsets": "2914",
+                        "endColumns": "263",
+                        "endOffsets": "3173"
                     }
                 }
             ]

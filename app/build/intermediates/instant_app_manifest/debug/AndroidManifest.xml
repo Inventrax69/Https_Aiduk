@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inventrax.aiduk"
     android:targetSandboxVersion="2"
-    android:versionCode="1"
-    android:versionName="1" >
+    android:versionCode="2"
+    android:versionName="1.0.1" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -79,7 +79,6 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/in_launcher"
         android:supportsRtl="true"
-        android:testOnly="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.inventrax.aiduk.activities.LoginActivity"
