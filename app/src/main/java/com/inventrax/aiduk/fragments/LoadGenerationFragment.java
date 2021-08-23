@@ -216,7 +216,10 @@ public class LoadGenerationFragment extends Fragment implements View.OnClickList
         soundUtils = new SoundUtils();
         exceptionLoggerUtils = new ExceptionLoggerUtils();
         errorMessages = new ErrorMessages();
-
+        lblDrName.setText("Driver");
+        lblDrNo.setText("123456789");
+        lblVehicleNo.setText("VEH123");
+        lblVehicleType.setText("LR123");
         // For Cipher Barcode reader
         Intent RTintent = new Intent("sw.reader.decode.require");
         RTintent.putExtra("Enable", true);
